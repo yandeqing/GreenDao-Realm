@@ -10,20 +10,20 @@ import android.widget.TextView;
 
 import com.example.administrator.jackwaiting_greendao.R;
 import com.example.administrator.jackwaiting_greendao.adapter.GreenDaoListAdapter;
-import com.example.administrator.jackwaiting_greendao.db.DBManager;
 import com.example.administrator.jackwaiting_greendao.been.User;
+import com.example.administrator.jackwaiting_greendao.db.DBManager;
 import com.example.administrator.jackwaiting_greendao.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GreenDaoActivity extends Activity implements View.OnClickListener{
+public class GreenDaoActivity extends Activity implements View.OnClickListener {
 
     private ListView lvUser;
     private DBManager greenDaoHelper;
     private List<User> users;
     private TextView tvTime;
-    private Button btnAdd,btnDelete;
+    private Button btnAdd, btnDelete;
     private int maxCount = 0;
     private EditText ediMaxCount;
     private PreferenceUtil preferenceUtil;
@@ -36,7 +36,7 @@ public class GreenDaoActivity extends Activity implements View.OnClickListener{
         initView();
         getGreenDaoHelper();
         initData();
-        long seleteTime=System.currentTimeMillis();
+        long seleteTime = System.currentTimeMillis();
         refreshData();
         tvTime.setText("GreenDao查询" + preferenceUtil.getGreenDaoCount() + "条数据花了" + (System.currentTimeMillis() - seleteTime) + "毫秒");
     }
@@ -48,10 +48,10 @@ public class GreenDaoActivity extends Activity implements View.OnClickListener{
     private void initData() {
         users = new ArrayList<User>();
         users.clear();
-        for (int i= 0;i< maxCount;i++){
+        for (int i = 0; i < maxCount; i++) {
             User user = new User();
             user.setId(i);
-            user.setName("JackWaiting"+i);
+            user.setName("JackWaiting" + i);
             user.setAge(i);
             users.add(user);
         }
@@ -69,28 +69,26 @@ public class GreenDaoActivity extends Activity implements View.OnClickListener{
     }
 
     public void getGreenDaoHelper() {
-        greenDaoHelper= new DBManager(this);
+        greenDaoHelper = new DBManager(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_add:
                 greenDaoHelper.deleteAll();
 
-                maxCount= Integer.parseInt(ediMaxCount.getText().toString());
+                maxCount = Integer.parseInt(ediMaxCount.getText().toString());
                 preferenceUtil.saveGreenDaoCount(maxCount);
                 initData();
-                long addTime=System.currentTimeMillis();
-                for (int i= 0;i<maxCount;i++){
-                   greenDaoHelper.insertUser(users.get(i));
-                }
-                tvTime.setText("GreenDao添加" + preferenceUtil.getGreenDaoCount()+"条数据花了" + (System.currentTimeMillis()-addTime)+"毫秒");
+                long addTime = System.currentTimeMillis();
+                greenDaoHelper.insertUsers(users);
+                tvTime.setText("GreenDao添加" + preferenceUtil.getGreenDaoCount() + "条数据花了" + (System.currentTimeMillis() - addTime) + "毫秒");
                 refreshData();
 
                 break;
             case R.id.btn_delete:
-                long deleteTime=System.currentTimeMillis();
+                long deleteTime = System.currentTimeMillis();
                 greenDaoHelper.deleteAll();
                 tvTime.setText("GreenDao删除" + preferenceUtil.getGreenDaoCount() + "条数据花了" + (System.currentTimeMillis() - deleteTime) + "毫秒");
                 refreshData();

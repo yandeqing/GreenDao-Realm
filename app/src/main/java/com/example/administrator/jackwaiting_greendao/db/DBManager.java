@@ -27,6 +27,9 @@ public class DBManager {
         return  userDao.loadAll();
     }
 
+    public void insertUsers(List<User> users){
+        userDao.insertOrReplaceInTx(users);
+    }
     public void insertUser(User user){
         userDao.insert(user);
     }

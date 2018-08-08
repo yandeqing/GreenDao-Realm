@@ -14,11 +14,14 @@ import io.realm.RealmResults;
 public class RealmDBManager {
 
     private Realm myOtherRealm;
-    public RealmDBManager(Context context) {
-        myOtherRealm = Realm.getInstance(new RealmConfiguration
-                .Builder(context)
+    public RealmDBManager() {
+        // The RealmConfiguration is created using the builder pattern.
+// The Realm file will be located in Context.getFilesDir() with name "myrealm.realm"
+        RealmConfiguration config = new RealmConfiguration.Builder()
                 .name("myOtherRealm.realm")
-                .build());
+                .build();
+// Use the config
+        myOtherRealm = Realm.getInstance(config);
     }
 
 
@@ -37,6 +40,13 @@ public class RealmDBManager {
 
     }
 
+    public void saveRealmObjects(List<RealmUser> users){
+        myOtherRealm.beginTransaction();
+        myOtherRealm.copyToRealmOrUpdate(users);
+        myOtherRealm.commitTransaction();
+
+    }
+
     public void commitTransaction(){
         myOtherRealm.commitTransaction();
     }
@@ -45,7 +55,7 @@ public class RealmDBManager {
         final RealmResults<RealmUser> results = myOtherRealm.where(RealmUser.class)
                 .findAll();
         myOtherRealm.beginTransaction();
-        results.clear();
+        results.deleteAllFromRealm();
         myOtherRealm.commitTransaction();
     }
 

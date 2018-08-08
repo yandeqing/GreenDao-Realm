@@ -83,11 +83,7 @@ public class RealmActivity extends Activity implements View.OnClickListener{
                 preferenceUtil.saveRealmCount(maxCount);
                 initData();
                 long addTime=System.currentTimeMillis();
-                myRealm.beginTransaction();
-                for (int i= 0;i<maxCount;i++){
-                    myRealm.saveRealmObject(users.get(i));
-                }
-                myRealm.commitTransaction();
+                myRealm.saveRealmObjects(users);
                 tvTime.setText("Realm添加" + preferenceUtil.getRealmCount() +"条数据花了" + (System.currentTimeMillis()-addTime)+"毫秒");
                 refreshData();
 
@@ -103,6 +99,6 @@ public class RealmActivity extends Activity implements View.OnClickListener{
     }
 
     public void getRealm() {
-        myRealm = new RealmDBManager(this);
+        myRealm = new RealmDBManager();
     }
 }
